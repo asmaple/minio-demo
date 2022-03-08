@@ -1,6 +1,7 @@
 package com.maple.minio.core.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
 import com.maple.minio.core.pojo.entity.AppInfo;
@@ -33,5 +34,15 @@ public class AppInfoServiceImpl extends ServiceImpl<AppInfoMapper, AppInfo> impl
         BeanUtil.copyProperties(appDTO,appInfo);
         int count = baseMapper.insert(appInfo);
         return count > 0;
+    }
+
+    @Override
+    public AppInfo getAppInfoByPackageName(String packageName) {
+        Assert.notNull(packageName, ResponseEnum.PARAMETER_ERROR);
+
+        QueryWrapper<AppInfo> appInfoQueryWrapper = new QueryWrapper<>();
+        appInfoQueryWrapper.eq("package_name", packageName).last("limit 1");;
+        AppInfo appInfo = baseMapper.selectOne(appInfoQueryWrapper);
+        return appInfo;
     }
 }

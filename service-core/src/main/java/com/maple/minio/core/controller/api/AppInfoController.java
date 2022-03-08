@@ -1,11 +1,14 @@
 package com.maple.minio.core.controller.api;
 
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.maple.common.result.R;
+import com.maple.minio.core.pojo.entity.AppInfo;
 import com.maple.minio.core.pojo.entity.dto.AppDTO;
 import com.maple.minio.core.pojo.entity.dto.FileDTO;
 import com.maple.minio.core.service.AppInfoService;
 import com.maple.minio.core.service.FileInfoService;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -83,6 +86,28 @@ public class AppInfoController {
         return R.error().message("APP上传失败");
     }
 
+
+    @ApiOperation("根据包名获取APP信息")
+    @GetMapping("/checkAppVersion/{versionCode}")
+    public R checkAppVersion(
+            @ApiParam(value = "版本号",required = true)
+            @PathVariable String versionCode){
+        if(StringUtil.isNullOrEmpty(versionCode)){
+            return R.error();
+        }
+
+        String packageName = "com.zm.zjwms";
+        AppInfo appInfo = appInfoService.getAppInfoByPackageName(packageName);
+        if(appInfo != null){
+            Integer code = appInfo.getVersionCode();
+            if(code > Integer.parseInt(versionCode)){
+                return R.ok().data("appInfo",appInfo);
+            } else {
+                return R.ok().message("已经是最新版本");
+            }
+        }
+        return R.error();
+    }
 
 }
 

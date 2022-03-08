@@ -17,4 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AppInfoService extends IService<AppInfo> {
 
     boolean saveAppInfo(AppDTO appDTO);
+
+    AppInfo getAppInfoByPackageName(String packageName);
 }
