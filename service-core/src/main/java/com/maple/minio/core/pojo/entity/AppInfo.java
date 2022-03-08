@@ -30,6 +30,9 @@ public class AppInfo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "文件表ID")
+    private Long fileInfoId;
+
     @ApiModelProperty(value = "APP类型（0：Android  1：IOS）")
     private Integer type;
 
@@ -51,6 +54,9 @@ public class AppInfo implements Serializable {
 
     @ApiModelProperty(value = "Android（下载地址） IOS（AppStore连接）")
     private String downloadUrl;
+
+    @ApiModelProperty(value = "应用包名")
+    private String packageName;
 
     @ApiModelProperty(value = "删除标记（0:不可用 1:可用）")
     @TableField("is_deleted")

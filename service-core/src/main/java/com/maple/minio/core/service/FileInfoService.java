@@ -2,6 +2,7 @@ package com.maple.minio.core.service;
 
 import com.maple.minio.core.pojo.entity.FileInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.maple.minio.core.pojo.entity.dto.AppDTO;
 import com.maple.minio.core.pojo.entity.dto.FileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public interface FileInfoService extends IService<FileInfo> {
 
     FileDTO uploadFile(MultipartFile file, String bucketName, String moduleName);
+    AppDTO uploadApp(MultipartFile file, String bucketName, String moduleName);
 
     boolean removeFile(String bucketName, String fileName);
 

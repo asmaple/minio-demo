@@ -5,6 +5,7 @@ import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
 import com.maple.minio.core.pojo.entity.FileInfo;
 import com.maple.minio.core.mapper.FileInfoMapper;
+import com.maple.minio.core.pojo.entity.dto.AppDTO;
 import com.maple.minio.core.pojo.entity.dto.FileDTO;
 import com.maple.minio.core.service.FileInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -57,6 +58,32 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         } catch (Exception e) {
             e.printStackTrace();
             log.error("=======uploadFile======>>>" + e.getStackTrace());
+        }
+        return null;
+    }
+
+    @Override
+    public AppDTO uploadApp(MultipartFile file, String bucketName, String moduleName) {
+        Assert.notNull(file, ResponseEnum.UPLOAD_ERROR);
+        Assert.notEmpty(bucketName, ResponseEnum.UPLOAD_ERROR);
+        Assert.notEmpty(moduleName, ResponseEnum.UPLOAD_ERROR);
+        try {
+            FileDTO fileDTO = minioUtil.uploadFile(file, bucketName,moduleName);
+            // 插入到数据库中
+            if(fileDTO != null){
+                FileInfo fileInfo = new FileInfo();
+                BeanUtil.copyProperties(fileDTO,fileInfo);
+                int count = baseMapper.insert(fileInfo);
+                if(count > 0){
+                    return AppDTO.builder()
+                            .fileInfoId(fileInfo.getId())
+                            .downloadUrl(fileInfo.getFileUrl())
+                            .build();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("=======uploadApp======>>>" + e.getStackTrace());
         }
         return null;
     }
