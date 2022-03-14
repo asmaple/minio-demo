@@ -88,14 +88,13 @@ public class AppInfoController {
 
 
     @ApiOperation("根据包名获取APP信息")
-    @GetMapping("/checkAppVersion/{versionCode}")
+    @GetMapping("/checkAppVersion")
     public R checkAppVersion(
             @ApiParam(value = "版本号",required = true)
-            @PathVariable String versionCode){
+            @RequestParam String versionCode){
         if(StringUtil.isNullOrEmpty(versionCode)){
             return R.error();
         }
-
         String packageName = "com.zm.zjwms";
         AppInfo appInfo = appInfoService.getAppInfoByPackageName(packageName);
         if(appInfo != null){
