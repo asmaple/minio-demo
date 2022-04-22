@@ -2,14 +2,12 @@ package com.maple.minio.core.controller.api;
 
 
 import com.maple.common.result.R;
+import com.maple.common.util.RsaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -33,5 +31,17 @@ public class FileInfoController {
     }
 
 
+    @ApiOperation(value = "测试rsa加密")
+    @PostMapping("/rsaTest")
+    public R rsaTest(@ApiParam(value = "参数", required = true)
+                         @RequestParam("password") String password) {
+        try {
+            String decryptData = RsaUtils.decrypt(password, RsaUtils.getPrivateKey(RsaUtils.privateKey));
+            return R.ok().data("decryptData", decryptData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.error();
+    }
 }
 
